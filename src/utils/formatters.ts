@@ -161,3 +161,124 @@ export function calculateBurnRate(
     isPaceOverbudget,
   };
 }
+
+export interface MonthInfo {
+  value: string; // standard English e.g. 'October'
+  labelId: string; // Indonesian e.g. 'Oktober'
+  labelEn: string;
+  monthNum: number; // 1-12
+}
+
+export const MONTH_LIST: MonthInfo[] = [
+  { value: 'January', labelId: 'Januari', labelEn: 'January', monthNum: 1 },
+  { value: 'February', labelId: 'Februari', labelEn: 'February', monthNum: 2 },
+  { value: 'March', labelId: 'Maret', labelEn: 'March', monthNum: 3 },
+  { value: 'April', labelId: 'April', labelEn: 'April', monthNum: 4 },
+  { value: 'May', labelId: 'Mei', labelEn: 'May', monthNum: 5 },
+  { value: 'June', labelId: 'Juni', labelEn: 'June', monthNum: 6 },
+  { value: 'July', labelId: 'Juli', labelEn: 'July', monthNum: 7 },
+  { value: 'August', labelId: 'Agustus', labelEn: 'August', monthNum: 8 },
+  { value: 'September', labelId: 'September', labelEn: 'September', monthNum: 9 },
+  { value: 'October', labelId: 'Oktober', labelEn: 'October', monthNum: 10 },
+  { value: 'November', labelId: 'November', labelEn: 'November', monthNum: 11 },
+  { value: 'December', labelId: 'Desember', labelEn: 'December', monthNum: 12 },
+];
+
+const MONTH_ALIAS_MAP: Record<string, string> = {
+  january: 'January',
+  januari: 'January',
+  jan: 'January',
+  february: 'February',
+  februari: 'February',
+  feb: 'February',
+  march: 'March',
+  maret: 'March',
+  mar: 'March',
+  april: 'April',
+  apr: 'April',
+  may: 'May',
+  mei: 'May',
+  june: 'June',
+  juni: 'June',
+  jun: 'June',
+  july: 'July',
+  juli: 'July',
+  jul: 'July',
+  august: 'August',
+  agustus: 'August',
+  aug: 'August',
+  agu: 'August',
+  september: 'September',
+  sep: 'September',
+  october: 'October',
+  oktober: 'October',
+  oct: 'October',
+  okt: 'October',
+  november: 'November',
+  nov: 'November',
+  december: 'December',
+  desember: 'December',
+  dec: 'December',
+  des: 'December',
+};
+
+/**
+ * Parse a period string (e.g. "October 2026", "Oktober 2026", "2026-10")
+ * into normalized components
+ */
+export function parsePeriod(periodStr: string): {
+  month: string; // e.g. "October"
+  monthLabelId: string; // e.g. "Oktober"
+  year: number; // e.g. 2026
+  monthIndex: number; // 0-11
+  isoPrefix: string; // "2026-10"
+  formattedDisplay: string; // "Oktober 2026"
+} {
+  const clean = (periodStr || '').trim();
+  let month = 'October';
+  let year = 2026;
+
+  // Pattern "YYYY-MM"
+  if (/^\d{4}-\d{2}$/.test(clean)) {
+    const [y, m] = clean.split('-');
+    year = parseInt(y, 10);
+    const mNum = parseInt(m, 10);
+    const found = MONTH_LIST.find((item) => item.monthNum === mNum);
+    if (found) month = found.value;
+  } else {
+    // Pattern "Month Year" or "Year Month"
+    const parts = clean.split(/\s+/);
+    if (parts.length >= 2) {
+      const yearPart = parts.find((p) => /^\d{4}$/.test(p));
+      const monthPart = parts.find((p) => !/^\d{4}$/.test(p))?.toLowerCase();
+      if (yearPart) year = parseInt(yearPart, 10);
+      if (monthPart && MONTH_ALIAS_MAP[monthPart]) {
+        month = MONTH_ALIAS_MAP[monthPart];
+      }
+    }
+  }
+
+  const foundItem = MONTH_LIST.find((m) => m.value.toLowerCase() === month.toLowerCase()) || MONTH_LIST[9];
+  const monthNumStr = String(foundItem.monthNum).padStart(2, '0');
+
+  return {
+    month: foundItem.value,
+    monthLabelId: foundItem.labelId,
+    year,
+    monthIndex: foundItem.monthNum - 1,
+    isoPrefix: `${year}-${monthNumStr}`,
+    formattedDisplay: `${foundItem.labelId} ${year}`,
+  };
+}
+
+/**
+ * Get period shifted by delta months (e.g. +1 for next month, -1 for previous)
+ */
+export function getAdjacentPeriod(currentPeriod: string, deltaMonths: number): string {
+  const { monthIndex, year } = parsePeriod(currentPeriod);
+  const totalMonths = year * 12 + monthIndex + deltaMonths;
+  const newYear = Math.floor(totalMonths / 12);
+  const newMonthIndex = ((totalMonths % 12) + 12) % 12;
+  const targetMonth = MONTH_LIST[newMonthIndex].value;
+  return `${targetMonth} ${newYear}`;
+}

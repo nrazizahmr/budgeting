@@ -11,6 +11,8 @@ import {
   CheckCircle2,
   AlertTriangle,
   FolderPlus,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { BudgetAllocation, Transaction, Category } from '../types/budget';
 import {
@@ -18,6 +20,9 @@ import {
   calculateBurnRate,
   getAlertLevel,
   getAlertBadgeStyle,
+  parsePeriod,
+  getAdjacentPeriod,
+  MONTH_LIST,
 } from '../utils/formatters';
 
 interface DashboardViewProps {
@@ -49,18 +54,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const activeBudgets = budgets.filter((b) => b.period === selectedPeriod);
 
   // Filter transactions matching period
+  const parsedPeriodInfo = parsePeriod(selectedPeriod);
   const activeTransactions = transactions.filter((tx) => {
     if (filterMode === 'custom') {
       const txDate = tx.dateTime.split('T')[0];
       return txDate >= customStartDate && txDate <= customEndDate;
     }
-    // Simple month matching for October 2026
-    if (selectedPeriod === 'October 2026') {
-      return tx.dateTime.startsWith('2026-10');
-    } else if (selectedPeriod === 'September 2026') {
-      return tx.dateTime.startsWith('2026-09');
-    }
-    return true;
+    // Dynamic matching for any Month and Year
+    return tx.dateTime.startsWith(parsedPeriodInfo.isoPrefix);
   });
 
   // Check AC-04.02: Empty state condition
@@ -79,8 +80,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const burnRateData = calculateBurnRate(
     totalSpent,
     totalAllocated,
-    9,
-    2026,
+    parsedPeriodInfo.monthIndex,
+    parsedPeriodInfo.year,
     salaryCycle
   );
 
@@ -125,26 +126,86 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </p>
         </div>
 
-        {/* Filter Segmented Control */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Filter Segmented Control & All-Months Navigator */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Universal Month & Year Picker */}
+          <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl text-xs border border-stone-200/60 dark:border-stone-700/60">
+            <button
+              type="button"
+              onClick={() => {
+                const prev = getAdjacentPeriod(selectedPeriod, -1);
+                onChangePeriod(prev);
+              }}
+              title="Bulan Sebelumnya"
+              className="p-1.5 hover:bg-white dark:hover:bg-stone-700 rounded-lg text-stone-600 dark:text-stone-300 transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+
+            {/* Month Select */}
+            <select
+              value={parsedPeriodInfo.month}
+              onChange={(e) => {
+                const newMonth = e.target.value;
+                onChangePeriod(`${newMonth} ${parsedPeriodInfo.year}`);
+              }}
+              className="bg-transparent font-bold text-stone-900 dark:text-white py-1 px-1.5 focus:outline-none cursor-pointer"
+            >
+              {MONTH_LIST.map((m) => (
+                <option key={m.value} value={m.value} className="bg-white dark:bg-stone-900 text-stone-900 dark:text-white">
+                  {m.labelId} ({m.value})
+                </option>
+              ))}
+            </select>
+
+            {/* Year Select */}
+            <select
+              value={parsedPeriodInfo.year}
+              onChange={(e) => {
+                const newYear = parseInt(e.target.value, 10);
+                onChangePeriod(`${parsedPeriodInfo.month} ${newYear}`);
+              }}
+              className="bg-transparent font-bold text-rose-600 dark:text-rose-400 py-1 px-1.5 focus:outline-none cursor-pointer"
+            >
+              {[2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035].map((yr) => (
+                <option key={yr} value={yr} className="bg-white dark:bg-stone-900 text-stone-900 dark:text-white">
+                  {yr}
+                </option>
+              ))}
+            </select>
+
+            <button
+              type="button"
+              onClick={() => {
+                const next = getAdjacentPeriod(selectedPeriod, 1);
+                onChangePeriod(next);
+              }}
+              title="Bulan Berikutnya"
+              className="p-1.5 hover:bg-white dark:hover:bg-stone-700 rounded-lg text-stone-600 dark:text-stone-300 transition-colors cursor-pointer"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Quick Presets */}
           <div className="bg-stone-100 dark:bg-stone-800 p-1 rounded-xl flex items-center text-xs">
             <button
               onClick={() => handlePeriodTab('current')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${filterMode === 'current'
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${filterMode === 'current' && selectedPeriod === 'October 2026'
                   ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-2xs font-semibold'
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
                 }`}
             >
-              Bulan Ini (Oct 2026)
+              Oct 2026
             </button>
             <button
               onClick={() => handlePeriodTab('last')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${filterMode === 'last'
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${filterMode === 'last' && selectedPeriod === 'September 2026'
                   ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-2xs font-semibold'
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
                 }`}
             >
-              Bulan Lalu (Sep 2026)
+              Sep 2026
             </button>
             <button
               onClick={() => handlePeriodTab('custom')}
@@ -153,7 +214,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
                 }`}
             >
-              Custom Range
+              Custom
             </button>
           </div>
 

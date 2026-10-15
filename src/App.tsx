@@ -11,6 +11,9 @@ import { ToastContainer, ToastItem } from './components/Toast';
 import { ScenarioHelper } from './components/ScenarioHelper';
 import { NotionModal } from './components/NotionModal';
 import { SalaryConfigModal } from './components/SalaryConfigModal';
+import { ScreenAdaptorControl } from './components/ScreenAdaptorControl';
+import { MobileBottomNav } from './components/MobileBottomNav';
+import { useScreenAdaptor } from './hooks/useScreenAdaptor';
 import { StorageService } from './services/storage';
 import { evaluateBudgetAlert } from './utils/alertEngine';
 import {
@@ -76,7 +79,11 @@ export default function App() {
   const [isNotificationOpen, setIsNotificationOpen] = useState<boolean>(false);
   const [isNotionModalOpen, setIsNotionModalOpen] = useState<boolean>(false);
   const [isSalaryModalOpen, setIsSalaryModalOpen] = useState<boolean>(false);
+  const [isScreenAdaptorOpen, setIsScreenAdaptorOpen] = useState<boolean>(false);
   const [prefillTx, setPrefillTx] = useState<any>(undefined);
+
+  // Screen Adaptor Engine (Auto-Responsive + Device Simulation)
+  const screenState = useScreenAdaptor();
 
   // Duplicate Budget Modal (AC-01.03)
   const [duplicateModal, setDuplicateModal] = useState<{
@@ -551,9 +558,12 @@ export default function App() {
     handleRunScenario('AC-04.02');
   };
 
-  return (
-    <div className="min-h-screen bg-[#faf9f6] dark:bg-[#0c0a09] text-stone-800 dark:text-stone-100 flex flex-col font-sans selection:bg-rose-100 selection:text-rose-900 transition-colors">
-      {/* Universal Header following Top Bar Contract */}
+  const isSimulatedMobileFrame = screenState.isSimulated && screenState.mode === 'mobile';
+  const isSimulatedTabletFrame = screenState.isSimulated && screenState.mode === 'tablet';
+
+  const appContent = (
+    <div className={`min-h-screen bg-[#faf9f6] dark:bg-[#0c0a09] text-stone-800 dark:text-stone-100 flex flex-col font-sans selection:bg-rose-100 selection:text-rose-900 transition-colors ${isSimulatedMobileFrame ? 'rounded-[38px] overflow-hidden' : ''}`}>
+      {/* Universal Header following Top Bar Contract & Responsive Layout */}
       <Header
         activeTab={activeTab}
         onSelectTab={setActiveTab}
@@ -564,6 +574,8 @@ export default function App() {
         onOpenNotifications={() => setIsNotificationOpen(true)}
         onOpenNotionModal={() => setIsNotionModalOpen(true)}
         onOpenSalaryConfig={() => setIsSalaryModalOpen(true)}
+        onOpenScreenAdaptor={() => setIsScreenAdaptorOpen(true)}
+        screenState={screenState}
         notifications={notifications}
         isOnline={isOnline}
         onToggleOnline={toggleOnlineMode}
@@ -573,8 +585,8 @@ export default function App() {
         onToggleTheme={handleToggleTheme}
       />
 
-      {/* Main Viewport Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      {/* Main Viewport Content - Automatically adapts padding & bottom dock spacing */}
+      <main className={`flex-1 w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 ${screenState.isMobile ? 'pb-24' : 'pb-8'} max-w-7xl transition-all`}>
         {activeTab === 'dashboard' && (
           <DashboardView
             budgets={budgets}
@@ -631,8 +643,8 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 py-6 mt-12 text-center text-xs text-stone-500 dark:text-stone-400 transition-colors">
+      {/* Footer (hidden or compact on mobile bottom nav) */}
+      <footer className={`border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 py-6 mt-12 text-center text-xs text-stone-500 dark:text-stone-400 transition-colors ${screenState.isMobile ? 'mb-16' : ''}`}>
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="font-bold text-stone-900 dark:text-white">BudgetIn</span>
@@ -644,6 +656,81 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation Dock (Thumb-friendly for mobile screens) */}
+      {screenState.isMobile && (
+        <MobileBottomNav
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
+          onOpenAddTransaction={() => {
+            setPrefillTx(undefined);
+            setIsAddTransactionOpen(true);
+          }}
+          offlineCount={offlineQueue.length}
+        />
+      )}
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-stone-100 dark:bg-stone-950 transition-colors">
+      {/* Simulation Info Bar when user manually forces mobile or tablet mode */}
+      {screenState.isSimulated && (
+        <div className="bg-stone-900 text-white px-4 py-2 text-xs flex items-center justify-between gap-4 border-b border-stone-800 z-50 sticky top-0">
+          <div className="flex items-center gap-2 truncate">
+            <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+            <span className="font-semibold truncate">
+              Simulasi Layar {screenState.mode === 'mobile' ? 'Smartphone (390px)' : 'Tablet (768px)'} Aktif
+            </span>
+            <span className="text-stone-400 text-[11px] hidden sm:inline">
+              · Menampilkan layout &amp; navigasi otomatis untuk format {screenState.effectiveCategory}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => screenState.setMode('auto')}
+              className="px-2.5 py-1 bg-stone-800 hover:bg-stone-700 text-stone-200 rounded-md text-[11px] font-medium transition-colors cursor-pointer"
+            >
+              Kembali ke Mode Otomatis
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsScreenAdaptorOpen(true)}
+              className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-md text-[11px] font-semibold transition-colors cursor-pointer"
+            >
+              Ubah Layar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Frame wrapper for simulated mobile */}
+      {isSimulatedMobileFrame ? (
+        <div className="p-4 sm:p-8 flex justify-center items-center min-h-[calc(100vh-40px)]">
+          <div className="w-full max-w-[412px] bg-stone-900 rounded-[50px] p-3 shadow-2xl border-4 border-stone-700 dark:border-stone-800 ring-1 ring-stone-950/20">
+            {/* Mockup speaker and camera island */}
+            <div className="h-5 flex items-center justify-between px-6 mb-1 text-[11px] font-bold text-stone-300">
+              <span>09:41</span>
+              <div className="w-20 h-4 bg-stone-950 rounded-full mx-auto" />
+              <div className="flex items-center gap-1">
+                <span>5G</span>
+                <span>100%</span>
+              </div>
+            </div>
+            {appContent}
+          </div>
+        </div>
+      ) : isSimulatedTabletFrame ? (
+        <div className="p-4 sm:p-8 flex justify-center items-center min-h-[calc(100vh-40px)]">
+          <div className="w-full max-w-[768px] bg-stone-900 rounded-[36px] p-3 shadow-2xl border-4 border-stone-700 dark:border-stone-800">
+            <div className="w-16 h-2.5 bg-stone-950 rounded-full mx-auto mb-2" />
+            {appContent}
+          </div>
+        </div>
+      ) : (
+        appContent
+      )}
 
       {/* Add / Fast Expense Modal */}
       <AddTransactionModal
@@ -711,6 +798,13 @@ export default function App() {
         onClose={() => setIsSalaryModalOpen(false)}
         userProfile={userProfile}
         onSaveProfile={handleSaveProfile}
+      />
+
+      {/* Screen Adaptor Modal (Auto-Responsive & Device Preview Control) */}
+      <ScreenAdaptorControl
+        screenState={screenState}
+        isOpen={isScreenAdaptorOpen}
+        onClose={() => setIsScreenAdaptorOpen(false)}
       />
 
       {/* Toasts Stack */}
