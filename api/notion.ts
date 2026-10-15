@@ -178,13 +178,13 @@ export default async function handler(req: any, res: any) {
       });
     }
 
-    // 5. Bulk sync / Push from local storage to Notion
-    if (actionType === 'push_all' && req.method === 'POST') {
+    // 5. Bulk sync / Push from local storage to Notion (push_all or push_latest)
+    if ((actionType === 'push_all' || actionType === 'push_latest') && req.method === 'POST') {
       const { budgets, transactions } = req.body;
       let budgetCount = 0;
       let transactionCount = 0;
 
-      if (budgetsDbId && Array.isArray(budgets)) {
+      if (budgetsDbId && Array.isArray(budgets) && budgets.length > 0) {
         for (const b of budgets) {
           await notion.pages.create({
             parent: { database_id: budgetsDbId },
@@ -200,7 +200,7 @@ export default async function handler(req: any, res: any) {
         }
       }
 
-      if (transactionsDbId && Array.isArray(transactions)) {
+      if (transactionsDbId && Array.isArray(transactions) && transactions.length > 0) {
         for (const tx of transactions) {
           await notion.pages.create({
             parent: { database_id: transactionsDbId },
@@ -217,9 +217,15 @@ export default async function handler(req: any, res: any) {
         }
       }
 
+      const msg = actionType === 'push_latest'
+        ? `Berhasil mengekspor ${transactionCount} transaksi terbaru ke database Notion tanpa menduplikasi data lama.`
+        : `Berhasil mengekspor ${budgetCount} anggaran dan ${transactionCount} transaksi ke database Notion.`;
+
       return res.status(200).json({
         success: true,
-        message: `Berhasil mengekspor ${budgetCount} anggaran dan ${transactionCount} transaksi ke database Notion.`,
+        message: msg,
+        budgetCount,
+        transactionCount,
       });
     }
 

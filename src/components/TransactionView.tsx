@@ -75,7 +75,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       <div className="bg-white dark:bg-stone-900 rounded-2xl p-6 border border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-colors">
         <div>
           <span className="text-xs font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
-            Manajemen Transaksi
+            US-02 · Manajemen Transaksi
           </span>
           <h1 className="text-2xl font-bold text-stone-900 dark:text-white mt-0.5">Daftar Mutasi Transaksi</h1>
           <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">

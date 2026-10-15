@@ -77,7 +77,7 @@ export const ScenarioHelper: React.FC<ScenarioHelperProps> = ({
   ];
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 max-w-sm w-full">
+    <div className="fixed bottom-16 sm:bottom-4 right-3 sm:right-4 z-40 max-w-[calc(100vw-24px)] sm:max-w-sm w-auto sm:w-full transition-all">
       <div className="bg-stone-900 text-white rounded-2xl shadow-2xl border border-stone-800 overflow-hidden">
         {/* Header Toggle */}
         <div
