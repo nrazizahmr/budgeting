@@ -1,0 +1,7 @@
+{
+  "name": "AuraBudget - Smart Budgeting for Young Women",
+  "description": "Aplikasi budgeting modern dan cerdas untuk wanita muda usia 24 tahun dengan alokasi anggaran bulanan, pencatatan transaksi cepat, sistem notifikasi ambang batas, dan analitik visual pengeluaran.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
