@@ -1,4 +1,4 @@
-# Panduan Lengkap Deploy AuraBudget ke Vercel dengan Storage Notion
+# Panduan Lengkap Deploy BudgetIn ke Vercel dengan Storage Notion
 
 Dokumen ini menjelaskan langkah demi langkah cara menghubungkan database **Notion** sebagai penyimpanan utama (*storage/backend*) dan men-deploy aplikasi ke **Vercel**.
 
@@ -18,7 +18,7 @@ Proyek ini telah dilengkapi dengan:
 
 1. Buka [Notion Developers / Integrations](https://www.notion.so/profile/integrations).
 2. Klik tombol **New integration** (+).
-3. Beri nama integrasi, contoh: `AuraBudget Bot`.
+3. Beri nama integrasi, contoh: `BudgetIn Bot`.
 4. Pilih **Workspace Notion** Anda.
 5. Pada bagian *Capabilities*, pastikan izin berikut aktif:
    - Read content
@@ -62,7 +62,7 @@ Ini langkah yang sering terlewat:
 1. Buka halaman database **Budgets** di Notion.
 2. Klik tombol titik tiga (**•••**) di pojok kanan atas halaman.
 3. Gulir ke bawah dan pilih **Connections** (atau **Add connections**).
-4. Cari dan pilih bot yang Anda buat di Langkah 1 (`AuraBudget Bot`).
+4. Cari dan pilih bot yang Anda buat di Langkah 1 (`BudgetIn Bot`).
 5. Lakukan hal yang sama untuk database **Transactions**.
 
 ---
@@ -85,7 +85,7 @@ Ini langkah yang sering terlewat:
    ```bash
    git init
    git add .
-   git commit -m "feat: complete AuraBudget with Notion backend"
+   git commit -m "feat: complete BudgetIn with Notion backend"
    git branch -M main
    git remote add origin https://github.com/<username>/<repo-name>.git
    git push -u origin main

@@ -600,12 +600,12 @@ export default function App() {
       <footer className="border-t border-stone-200 bg-white py-6 mt-12 text-center text-xs text-stone-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-stone-900">AuraBudget</span>
+            <span className="font-bold text-stone-900">BudgetIn</span>
             <span>·</span>
             <span>Aplikasi Pengelola Anggaran Personal untuk Wanita Usia 24 Tahun</span>
           </div>
           <div className="text-stone-400">
-            Hak Cipta © 2026 AuraBudget. Waktu Acuan: 14 Oktober 2026.
+            Hak Cipta © 2026 BudgetIn. Waktu Acuan: 14 Oktober 2026.
           </div>
         </div>
       </footer>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, Wifi, WifiOff, PlusCircle, Database } from 'lucide-react';
+import { Bell, Wifi, WifiOff, PlusCircle, Database, User } from 'lucide-react';
 import { UserProfile, AlertNotification } from '../types/budget';
 
 interface HeaderProps {
@@ -41,10 +41,10 @@ export const Header: React.FC<HeaderProps> = ({
             className="text-left group flex items-center gap-2 cursor-pointer focus:outline-none"
           >
             <div className="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center font-bold text-base shadow-sm">
-              A
+              B
             </div>
             <span className="text-xl font-bold tracking-tight text-stone-900 whitespace-nowrap">
-              AuraBudget
+              BudgetIn
             </span>
           </button>
         </div>
@@ -142,19 +142,16 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* User Avatar & Profile Quick Trigger */}
+          {/* User Profile Quick Trigger */}
           <button
             type="button"
             onClick={onOpenSalaryConfig}
             title="Klik untuk konfigurasi nominal gaji & profil"
             className="flex items-center gap-2 pl-1 border-l border-stone-200 hover:opacity-80 transition-opacity cursor-pointer group text-left"
           >
-            <img
-              src={profile.avatarUrl}
-              alt={profile.name}
-              referrerPolicy="no-referrer"
-              className="w-8 h-8 rounded-full object-cover border border-stone-200 shadow-2xs group-hover:ring-2 group-hover:ring-rose-400 transition-all"
-            />
+            <div className="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center border border-rose-200 shadow-2xs group-hover:ring-2 group-hover:ring-rose-400 transition-all">
+              <User className="w-4 h-4" />
+            </div>
             <div className="hidden lg:block text-left text-xs">
               <p className="font-semibold text-stone-900 leading-none group-hover:text-rose-600 transition-colors">
                 {profile.name}

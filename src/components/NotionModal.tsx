@@ -335,7 +335,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                 <h4 className="font-bold text-stone-900 text-sm mb-1.5">Langkah 1: Buat Integrasi di Notion</h4>
                 <ol className="list-decimal list-inside space-y-1 text-stone-600">
                   <li>Buka <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noreferrer" className="text-rose-600 font-semibold underline">notion.so/my-integrations</a>.</li>
-                  <li>Klik <strong>New integration</strong>, beri nama misal <em>"AuraBudget App"</em>.</li>
+                  <li>Klik <strong>New integration</strong>, beri nama misal <em>"BudgetIn Bot"</em>.</li>
                   <li>Pilih workspace kamu dan simpan.</li>
                   <li>Salin <strong>Internal Integration Secret</strong> (awalan <code>secret_...</code>).</li>
                 </ol>
@@ -372,7 +372,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
               <div className="border border-stone-200 rounded-xl p-4 bg-white">
                 <h4 className="font-bold text-stone-900 text-sm mb-1.5">Langkah 3: Sambungkan Integrasi ke Database (Connect)</h4>
                 <p>
-                  Pada masing-masing database di Notion, klik tombol <strong>•••</strong> di pojok kanan atas &gt; pilih <strong>Connections</strong> &gt; pilih integrasi <em>"AuraBudget App"</em> yang baru dibuat.
+                  Pada masing-masing database di Notion, klik tombol <strong>•••</strong> di pojok kanan atas &gt; pilih <strong>Connections</strong> &gt; pilih integrasi <em>"BudgetIn Bot"</em> yang baru dibuat.
                 </p>
                 <p className="mt-1 text-[11px] text-stone-500">
                   Salin <strong>Database ID</strong> dari URL Notion kamu: <br />
@@ -393,7 +393,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                   NOTION_BUDGETS_DB_ID = xxxxxxxx...<br />
                   NOTION_TRANSACTIONS_DB_ID = xxxxxxxx...
                 </div>
-                <p className="mt-2">Klik <strong>Deploy</strong>. Selesai! Web app AuraBudget langsung online dan terhubung ke Notion.</p>
+                <p className="mt-2">Klik <strong>Deploy</strong>. Selesai! Web app BudgetIn langsung online dan terhubung ke Notion.</p>
               </div>
             </div>
           </div>
