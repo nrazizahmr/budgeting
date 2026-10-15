@@ -1,19 +1,6 @@
 import React from 'react';
-import {
-  Bell,
-  Wifi,
-  WifiOff,
-  PlusCircle,
-  Database,
-  User,
-  Sun,
-  Moon,
-  Smartphone,
-  Sliders,
-  Monitor,
-} from 'lucide-react';
+import { Bell, Wifi, WifiOff, PlusCircle, Database, User, Sun, Moon } from 'lucide-react';
 import { UserProfile, AlertNotification } from '../types/budget';
-import { ScreenState } from '../hooks/useScreenAdaptor';
 
 interface HeaderProps {
   activeTab: 'dashboard' | 'budgets' | 'transactions' | 'analytics';
@@ -22,8 +9,6 @@ interface HeaderProps {
   onOpenNotifications: () => void;
   onOpenNotionModal: () => void;
   onOpenSalaryConfig: () => void;
-  onOpenScreenAdaptor: () => void;
-  screenState: ScreenState;
   notifications: AlertNotification[];
   isOnline: boolean;
   onToggleOnline: () => void;
@@ -40,8 +25,6 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenNotifications,
   onOpenNotionModal,
   onOpenSalaryConfig,
-  onOpenScreenAdaptor,
-  screenState,
   notifications,
   isOnline,
   onToggleOnline,
@@ -114,38 +97,13 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </nav>
 
-        {/* Zone 3: Actions + Screen Adaptor + Profile */}
-        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-          {/* Screen Adaptor Mode Switcher Button */}
-          <button
-            type="button"
-            onClick={onOpenScreenAdaptor}
-            title={`Mode Layar: ${screenState.effectiveCategory} (${screenState.mode === 'auto' ? 'Otomatis' : 'Simulasi'}). Klik untuk ubah.`}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors cursor-pointer border border-stone-200/60 dark:border-stone-700/60"
-          >
-            {screenState.isMobile ? (
-              <Smartphone className="w-3.5 h-3.5 text-rose-500" />
-            ) : screenState.isTablet ? (
-              <Sliders className="w-3.5 h-3.5 text-purple-500" />
-            ) : (
-              <Monitor className="w-3.5 h-3.5 text-rose-500" />
-            )}
-            <span className="hidden sm:inline text-stone-500 dark:text-stone-400">Layar:</span>
-            <span className="font-bold text-stone-900 dark:text-white capitalize">
-              {screenState.effectiveCategory}
-            </span>
-            {screenState.mode === 'auto' && (
-              <span className="hidden lg:inline text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-bold">
-                Auto
-              </span>
-            )}
-          </button>
-
-          {/* Online/Offline Simulator Button (visible on tablet+) */}
+        {/* Zone 3: 1 primary action + profile/status tools */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          {/* Online/Offline Simulator Button */}
           <button
             onClick={onToggleOnline}
             title={isOnline ? 'Online mode (Click to simulate offline)' : 'Offline mode (Click to reconnect)'}
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
               isOnline
                 ? 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
                 : 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 hover:bg-amber-200'
@@ -154,24 +112,24 @@ export const Header: React.FC<HeaderProps> = ({
             {isOnline ? (
               <>
                 <Wifi className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span className="hidden md:inline">Online</span>
+                <span className="hidden sm:inline">Online</span>
               </>
             ) : (
               <>
                 <WifiOff className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                <span>Offline {offlineCount > 0 ? `(${offlineCount})` : ''}</span>
+                <span>Offline {offlineCount > 0 ? `(${offlineCount} unsynced)` : ''}</span>
               </>
             )}
           </button>
 
-          {/* Notion Integration Button (visible on tablet+) */}
+          {/* Notion Integration Button */}
           <button
             onClick={onOpenNotionModal}
             title="Integrasi & Sinkronisasi Notion"
-            className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors cursor-pointer"
           >
             <Database className="w-3.5 h-3.5 text-stone-700 dark:text-stone-300" />
-            <span>Notion</span>
+            <span className="hidden sm:inline">Notion</span>
           </button>
 
           {/* Theme Mode Toggle Button */}
@@ -220,15 +178,43 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </button>
 
-          {/* Primary Action Button (Desktop & Tablet) */}
+          {/* Primary Action Button */}
           <button
             onClick={onOpenAddTransaction}
-            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors shadow-xs whitespace-nowrap shrink-0 cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors shadow-xs whitespace-nowrap shrink-0 cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
             <span>+ Catat Transaksi</span>
           </button>
         </div>
+      </div>
+
+      {/* Mobile nav bar */}
+      <div className="md:hidden flex items-center justify-around border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 py-2 px-2 text-xs font-medium">
+        <button
+          onClick={() => onSelectTab('dashboard')}
+          className={`py-1 px-2 rounded cursor-pointer ${activeTab === 'dashboard' ? 'text-rose-600 dark:text-rose-400 font-bold' : 'text-stone-600 dark:text-stone-400'}`}
+        >
+          Dashboard
+        </button>
+        <button
+          onClick={() => onSelectTab('budgets')}
+          className={`py-1 px-2 rounded cursor-pointer ${activeTab === 'budgets' ? 'text-rose-600 dark:text-rose-400 font-bold' : 'text-stone-600 dark:text-stone-400'}`}
+        >
+          Manage Budget
+        </button>
+        <button
+          onClick={() => onSelectTab('transactions')}
+          className={`py-1 px-2 rounded cursor-pointer ${activeTab === 'transactions' ? 'text-rose-600 dark:text-rose-400 font-bold' : 'text-stone-600 dark:text-stone-400'}`}
+        >
+          Transactions
+        </button>
+        <button
+          onClick={() => onSelectTab('analytics')}
+          className={`py-1 px-2 rounded cursor-pointer ${activeTab === 'analytics' ? 'text-rose-600 dark:text-rose-400 font-bold' : 'text-stone-600 dark:text-stone-400'}`}
+        >
+          Analytics
+        </button>
       </div>
     </header>
   );

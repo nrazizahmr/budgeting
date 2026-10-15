@@ -8,19 +8,9 @@ import {
   Check,
   AlertCircle,
   HelpCircle,
-  ChevronLeft,
-  ChevronRight,
-  Sparkles,
 } from 'lucide-react';
 import { BudgetAllocation, Category, UserProfile } from '../types/budget';
-import {
-  formatIDR,
-  getAlertLevel,
-  getAlertBadgeStyle,
-  parsePeriod,
-  getAdjacentPeriod,
-  MONTH_LIST,
-} from '../utils/formatters';
+import { formatIDR, getAlertLevel, getAlertBadgeStyle } from '../utils/formatters';
 
 interface ManageBudgetViewProps {
   budgets: BudgetAllocation[];
@@ -60,22 +50,6 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
   const [nominalStr, setNominalStr] = useState<string>('');
   const [rolloverEnabled, setRolloverEnabled] = useState<boolean>(true);
   const [nominalTouched, setNominalTouched] = useState<boolean>(false);
-
-  // Parse active selected period into Month & Year
-  const { month: currentMonthVal, monthLabelId: currentMonthLabel, year: currentYearVal, formattedDisplay } = parsePeriod(selectedPeriod);
-
-  // Generate an extensive, complete list of selectable years
-  // Starting from 2020 to 2035+, plus any other year present in existing budgets or selectedPeriod
-  const customYearsInBudgets = budgets.map((b) => parsePeriod(b.period).year);
-  const minYear = Math.min(2020, currentYearVal, ...customYearsInBudgets);
-  const maxYear = Math.max(2035, currentYearVal, ...customYearsInBudgets);
-  const yearList: number[] = [];
-  for (let y = minYear; y <= maxYear; y++) {
-    yearList.push(y);
-  }
-
-  // Distinct saved periods with active budget allocations
-  const savedPeriodsWithBudgets = Array.from(new Set(budgets.map((b) => b.period))).filter(Boolean);
 
   // Filter budgets for active selected period
   const periodBudgets = budgets.filter((b) => b.period === selectedPeriod);
@@ -173,13 +147,12 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
           </div>
           <h1 className="text-2xl font-bold text-stone-900 dark:text-white">Manage Budget &amp; Alokasi</h1>
           <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-            Atur batas nominal anggaran untuk semua bulan dan semua tahun secara fleksibel.
+            Atur batas nominal anggaran bulanan dan kustomisasi siklus penggajian bulanan.
           </p>
         </div>
 
         {/* Cycle & Period Controls */}
         <div className="flex flex-wrap items-center gap-3">
-          {/* Salary Cycle Selector */}
           <div className="flex items-center gap-2 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl text-xs">
             <button
               onClick={() => onUpdateSalaryCycle('1-end')}
@@ -201,70 +174,18 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
             </button>
           </div>
 
-          {/* DYNAMIC MONTH & YEAR PICKER (Semua Bulan & Semua Tahun) */}
-          <div className="flex items-center gap-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 p-1 rounded-xl text-xs shadow-2xs">
-            <button
-              type="button"
-              onClick={() => onChangePeriod(getAdjacentPeriod(selectedPeriod, -1))}
-              title="Bulan Sebelumnya"
-              className="p-1.5 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors cursor-pointer"
+          <div className="flex items-center gap-1.5 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 px-3 py-1.5 rounded-xl text-xs">
+            <Calendar className="w-3.5 h-3.5 text-stone-400" />
+            <select
+              value={selectedPeriod}
+              onChange={(e) => onChangePeriod(e.target.value)}
+              className="text-stone-900 dark:text-white font-semibold focus:outline-none cursor-pointer bg-transparent"
             >
-              <ChevronLeft className="w-3.5 h-3.5" />
-            </button>
-
-            {/* Select Month (All 12 Months) */}
-            <div className="flex items-center gap-1 px-1.5 py-0.5">
-              <Calendar className="w-3.5 h-3.5 text-rose-500" />
-              <select
-                value={currentMonthVal}
-                onChange={(e) => onChangePeriod(`${e.target.value} ${currentYearVal}`)}
-                className="text-stone-900 dark:text-white font-bold focus:outline-none cursor-pointer bg-transparent text-xs"
-              >
-                {MONTH_LIST.map((m) => (
-                  <option key={m.value} value={m.value} className="dark:bg-stone-800 text-stone-900 dark:text-white">
-                    {m.labelId}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <span className="text-stone-300 dark:text-stone-600">/</span>
-
-            {/* Select Year (All Years from 2020 to 2035+) */}
-            <div className="px-1.5 py-0.5">
-              <select
-                value={currentYearVal}
-                onChange={(e) => onChangePeriod(`${currentMonthVal} ${e.target.value}`)}
-                className="text-stone-900 dark:text-white font-bold focus:outline-none cursor-pointer bg-transparent text-xs"
-              >
-                {yearList.map((y) => (
-                  <option key={y} value={y} className="dark:bg-stone-800 text-stone-900 dark:text-white">
-                    {y}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => onChangePeriod(getAdjacentPeriod(selectedPeriod, 1))}
-              title="Bulan Berikutnya"
-              className="p-1.5 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors cursor-pointer"
-            >
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
+              <option value="October 2026" className="dark:bg-stone-800">October 2026</option>
+              <option value="November 2026" className="dark:bg-stone-800">November 2026</option>
+              <option value="September 2026" className="dark:bg-stone-800">September 2026</option>
+            </select>
           </div>
-
-          {/* Quick Jump: Bulan Ini button */}
-          {selectedPeriod !== 'October 2026' && (
-            <button
-              type="button"
-              onClick={() => onChangePeriod('October 2026')}
-              className="px-2.5 py-1.5 text-[11px] font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl transition-colors cursor-pointer border border-rose-200 dark:border-rose-900/60"
-            >
-              Ke Bulan Ini
-            </button>
-          )}
         </div>
       </div>
 
@@ -394,43 +315,17 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
               </div>
             </div>
 
-            {/* Target Period with Month & Year dropdowns */}
+            {/* Target Period */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300">
-                  Target Periode Anggaran
-                </label>
-                <span className="text-[11px] font-semibold text-rose-600 dark:text-rose-400">
-                  {currentMonthLabel} {currentYearVal}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <select
-                  value={currentMonthVal}
-                  onChange={(e) => onChangePeriod(`${e.target.value} ${currentYearVal}`)}
-                  className="w-full px-3 py-2 text-xs font-semibold text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
-                >
-                  {MONTH_LIST.map((m) => (
-                    <option key={m.value} value={m.value} className="dark:bg-stone-800 text-stone-900 dark:text-white">
-                      {m.labelId}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={currentYearVal}
-                  onChange={(e) => onChangePeriod(`${currentMonthVal} ${e.target.value}`)}
-                  className="w-full px-3 py-2 text-xs font-semibold text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
-                >
-                  {yearList.map((y) => (
-                    <option key={y} value={y} className="dark:bg-stone-800 text-stone-900 dark:text-white">
-                      {y}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <p className="text-[11px] text-stone-400 dark:text-stone-500 mt-1">
-                Anggaran berlaku untuk bulan <strong>{currentMonthLabel} {currentYearVal}</strong> ({selectedPeriod}).
-              </p>
+              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                Periode Anggaran
+              </label>
+              <input
+                type="text"
+                readOnly
+                value={selectedPeriod}
+                className="w-full px-3.5 py-2 text-sm text-stone-700 dark:text-stone-300 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl"
+              />
             </div>
 
             {/* Rollover Option Toggle */}
@@ -474,50 +369,21 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
 
         {/* Allocations List Column */}
         <div className="lg:col-span-7 space-y-4">
-          <div>
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-stone-900 dark:text-white">
-                Daftar Alokasi ({currentMonthLabel} {currentYearVal})
-              </h2>
-              <span className="text-xs text-stone-500 dark:text-stone-400 font-medium">
-                {periodBudgets.length} kategori aktif
-              </span>
-            </div>
-
-            {/* Saved periods quick switcher */}
-            {savedPeriodsWithBudgets.length > 1 && (
-              <div className="flex flex-wrap items-center gap-1.5 pt-2">
-                <span className="text-[10px] text-stone-400 dark:text-stone-500 mr-0.5">Periode tersimpan:</span>
-                {savedPeriodsWithBudgets.map((sp) => {
-                  const pInfo = parsePeriod(sp);
-                  const isCurrent = sp === selectedPeriod;
-                  const count = budgets.filter((b) => b.period === sp).length;
-                  return (
-                    <button
-                      key={sp}
-                      type="button"
-                      onClick={() => onChangePeriod(sp)}
-                      className={`px-2 py-0.5 text-[10px] rounded-md font-medium transition-colors cursor-pointer ${isCurrent
-                          ? 'bg-rose-600 text-white font-bold shadow-2xs'
-                          : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-                        }`}
-                    >
-                      {pInfo.monthLabelId} {pInfo.year} ({count})
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-bold text-stone-900 dark:text-white">
+              Daftar Alokasi ({selectedPeriod})
+            </h2>
+            <span className="text-xs text-stone-500 dark:text-stone-400 font-medium">
+              {periodBudgets.length} kategori aktif
+            </span>
           </div>
 
           {periodBudgets.length === 0 ? (
             <div className="bg-white dark:bg-stone-900 p-8 rounded-2xl border border-stone-200 dark:border-stone-800 text-center">
               <HelpCircle className="w-10 h-10 text-stone-300 dark:text-stone-600 mx-auto mb-2" />
-              <p className="text-sm font-semibold text-stone-700 dark:text-stone-300">
-                Belum Ada Anggaran untuk {currentMonthLabel} {currentYearVal}
-              </p>
+              <p className="text-sm font-semibold text-stone-700 dark:text-stone-300">Belum Ada Anggaran untuk Periode Ini</p>
               <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 max-w-sm mx-auto">
-                Gunakan form di samping untuk mulai mengalokasikan batas belanja bulanan pada bulan {currentMonthLabel} {currentYearVal}.
+                Gunakan form di samping untuk mulai mengalokasikan batas belanja bulanan kamu.
               </p>
             </div>
           ) : (

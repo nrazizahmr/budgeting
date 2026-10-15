@@ -37,7 +37,6 @@ export const NotionModal: React.FC<NotionModalProps> = ({
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
   const [copiedEnv, setCopiedEnv] = useState(false);
   const [activeTab, setActiveTab] = useState<'config' | 'guide'>('config');
-  const [latestExportMode, setLatestExportMode] = useState<'unexported_only' | 'latest_one'>('unexported_only');
 
   useEffect(() => {
     if (isOpen) {
@@ -76,17 +75,15 @@ export const NotionModal: React.FC<NotionModalProps> = ({
     }
   };
 
-  // Fitur 1: Export Langsung Semua Data
   const handlePushAll = async () => {
     setIsTesting(true);
     try {
       const res = await NotionService.pushAll(budgets, transactions, config);
       if (res.success) {
-        setConfig(NotionService.getConfig());
         onToast({
           type: 'success',
-          title: 'Export Semua Data Sukses',
-          message: res.message || `Berhasil mengekspor semua data ke Notion.`,
+          title: 'Export ke Notion Sukses',
+          message: res.message,
         });
       } else {
         onToast({
@@ -104,64 +101,6 @@ export const NotionModal: React.FC<NotionModalProps> = ({
     } finally {
       setIsTesting(false);
     }
-  };
-
-  // Fitur 2: Export Data Terbaru Saja (Anti-Duplikasi)
-  const handlePushLatest = async () => {
-    if (!transactions || transactions.length === 0) {
-      onToast({
-        type: 'warning',
-        title: 'Belum Ada Transaksi',
-        message: 'Tidak ada data transaksi yang dapat diekspor.',
-      });
-      return;
-    }
-
-    setIsTesting(true);
-    try {
-      const res = await NotionService.pushLatest(transactions, config, latestExportMode);
-      if (res.success) {
-        setConfig(NotionService.getConfig());
-        const count = res.exportedCount || 1;
-        const sample = res.sampleTransaction;
-        const sampleDesc = sample ? ` (${sample.categoryName}: Rp${new Intl.NumberFormat('id-ID').format(sample.amount)})` : '';
-        onToast({
-          type: 'success',
-          title: 'Export Data Terbaru Sukses',
-          message: `Berhasil mengekspor ${count} transaksi terbaru ke Notion tanpa menduplikasi data lama${sampleDesc}.`,
-        });
-      } else {
-        onToast({
-          type: 'error',
-          title: 'Gagal Export Data Terbaru',
-          message: res.message || 'Periksa konfigurasi Database ID Transaksi.',
-        });
-      }
-    } catch {
-      onToast({
-        type: 'error',
-        title: 'Error Jaringan',
-        message: 'Endpoint Vercel /api/notion akan aktif penuh setelah deploy ke Vercel.',
-      });
-    } finally {
-      setIsTesting(false);
-    }
-  };
-
-  const handleResetExportTracking = () => {
-    const updated = {
-      ...config,
-      exportedTxIds: [],
-      lastSyncedAt: undefined,
-      lastExportMode: undefined,
-    };
-    NotionService.saveConfig(updated);
-    setConfig(updated);
-    onToast({
-      type: 'info',
-      title: 'Riwayat Ekspor Direset',
-      message: 'Status tracking ekspor dibersihkan. Semua transaksi siap diekspor kembali jika dibutuhkan.',
-    });
   };
 
   const handlePullAll = async () => {
@@ -192,16 +131,6 @@ export const NotionModal: React.FC<NotionModalProps> = ({
       setIsTesting(false);
     }
   };
-
-  // Compute unexported transactions count and find most recent transaction
-  const exportedSet = new Set(config.exportedTxIds || []);
-  const unexportedCount = transactions.filter((t) => !exportedSet.has(t.id)).length;
-  const sortedTransactions = [...transactions].sort((a, b) => {
-    const tA = new Date(a.dateTime || a.createdAt).getTime();
-    const tB = new Date(b.dateTime || b.createdAt).getTime();
-    return tB - tA;
-  });
-  const latestTx = sortedTransactions[0];
 
   const envSnippet = `NOTION_API_KEY=${config.apiKey || 'secret_your_notion_key'}
 NOTION_BUDGETS_DB_ID=${config.budgetsDbId || 'your_budgets_database_id'}
@@ -334,7 +263,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
               </div>
             )}
 
-            {/* Action Header Buttons */}
+            {/* Action buttons */}
             <div className="flex flex-wrap items-center gap-2.5 pt-2">
               <button
                 type="button"
@@ -355,147 +284,21 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
               <button
                 type="button"
                 disabled={isTesting}
+                onClick={handlePushAll}
+                className="px-4 py-2 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 rounded-xl font-semibold flex items-center gap-1.5 cursor-pointer"
+              >
+                <UploadCloud className="w-3.5 h-3.5" />
+                <span>Export Local Data ke Notion</span>
+              </button>
+              <button
+                type="button"
+                disabled={isTesting}
                 onClick={handlePullAll}
                 className="px-4 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 rounded-xl font-semibold flex items-center gap-1.5 cursor-pointer"
               >
                 <DownloadCloud className="w-3.5 h-3.5" />
                 <span>Tarik Data dari Notion</span>
               </button>
-            </div>
-
-            {/* DUAL EXPORT FEATURES (Fitur 1: Data Terbaru Saja & Fitur 2: Semua Data) */}
-            <div className="mt-4 pt-4 border-t border-stone-200 dark:border-stone-800 space-y-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-bold text-stone-900 dark:text-white text-xs">Pilihan Ekspor ke Database Notion</h3>
-                  <p className="text-[11px] text-stone-500 dark:text-stone-400">Pilih antara mengekspor hanya data tambahan terbaru atau seluruh database.</p>
-                </div>
-                {config.lastSyncedAt && (
-                  <span className="text-[10px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-md font-medium border border-emerald-200 dark:border-emerald-800">
-                    Terakhir Sync: {new Date(config.lastSyncedAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                )}
-              </div>
-
-              {/* FITUR 1: EXPORT DATA TERBARU SAJA (Anti-Duplikasi) */}
-              <div className="p-3.5 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/40 dark:bg-rose-950/20 space-y-2.5">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className="px-1.5 py-0.5 text-[10px] font-bold bg-rose-600 text-white rounded">Fitur 1</span>
-                    <h4 className="font-bold text-stone-900 dark:text-white text-xs">Export Data Terbaru Saja (Cegah Duplikasi)</h4>
-                  </div>
-                  <span className="text-[10px] text-rose-700 dark:text-rose-400 font-semibold bg-rose-100 dark:bg-rose-900/50 px-2 py-0.5 rounded-full">
-                    Rekomendasi Rutin
-                  </span>
-                </div>
-                <p className="text-[11px] text-stone-600 dark:text-stone-300">
-                  Hanya mengirim transaksi baru yang belum pernah dikirim ke Notion atau hanya transaksi paling terakhir, sehingga riwayat lama yang sudah ada tidak ter-double.
-                </p>
-
-                {/* Scope selector */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-                  <label
-                    className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-colors ${
-                      latestExportMode === 'unexported_only'
-                        ? 'border-rose-500 bg-white dark:bg-stone-850 text-stone-900 dark:text-white font-semibold shadow-2xs'
-                        : 'border-stone-200 dark:border-stone-800 bg-white/60 dark:bg-stone-900/40 text-stone-600 dark:text-stone-400'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="latestExportMode"
-                      value="unexported_only"
-                      checked={latestExportMode === 'unexported_only'}
-                      onChange={() => setLatestExportMode('unexported_only')}
-                      className="text-rose-600 focus:ring-rose-500"
-                    />
-                    <div>
-                      <span>Transaksi Belum Pernah Di-Export</span>
-                      <span className="block text-[10px] text-rose-600 dark:text-rose-400 font-medium">
-                        ({unexportedCount} transaksi baru siap dikirim)
-                      </span>
-                    </div>
-                  </label>
-
-                  <label
-                    className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-colors ${
-                      latestExportMode === 'latest_one'
-                        ? 'border-rose-500 bg-white dark:bg-stone-850 text-stone-900 dark:text-white font-semibold shadow-2xs'
-                        : 'border-stone-200 dark:border-stone-800 bg-white/60 dark:bg-stone-900/40 text-stone-600 dark:text-stone-400'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="latestExportMode"
-                      value="latest_one"
-                      checked={latestExportMode === 'latest_one'}
-                      onChange={() => setLatestExportMode('latest_one')}
-                      className="text-rose-600 focus:ring-rose-500"
-                    />
-                    <div>
-                      <span>Hanya 1 Transaksi Terakhir Saja</span>
-                      {latestTx && (
-                        <span className="block text-[10px] text-stone-500 dark:text-stone-400 font-normal">
-                          {latestTx.categoryName} • Rp{new Intl.NumberFormat('id-ID').format(latestTx.amount)}
-                        </span>
-                      )}
-                    </div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between pt-1">
-                  <div className="text-[10px] text-stone-500 dark:text-stone-400">
-                    {latestTx ? (
-                      <span>Data terbaru: <strong>{latestTx.categoryName}</strong> (Rp{new Intl.NumberFormat('id-ID').format(latestTx.amount)}) • {latestTx.dateTime.slice(0, 10)}</span>
-                    ) : (
-                      <span>Belum ada transaksi di riwayat lokal.</span>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    disabled={isTesting || transactions.length === 0}
-                    onClick={handlePushLatest}
-                    className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white rounded-lg font-semibold flex items-center gap-1.5 cursor-pointer text-xs shadow-xs"
-                  >
-                    <UploadCloud className="w-3.5 h-3.5" />
-                    <span>Export Data Terbaru Saja</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* FITUR 2: EXPORT LANGSUNG SEMUA DATA (Full Sync) */}
-              <div className="p-3.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/60 dark:bg-stone-850/40 space-y-2">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className="px-1.5 py-0.5 text-[10px] font-bold bg-stone-800 dark:bg-stone-700 text-white rounded">Fitur 2</span>
-                    <h4 className="font-bold text-stone-900 dark:text-white text-xs">Export Langsung Semua Data (Full Backup)</h4>
-                  </div>
-                  <span className="text-[10px] text-stone-500 dark:text-stone-400 font-medium">
-                    Total: {budgets.length} Anggaran &amp; {transactions.length} Transaksi
-                  </span>
-                </div>
-                <p className="text-[11px] text-stone-600 dark:text-stone-400">
-                  Mengekspor seluruh kategori anggaran beserta seluruh riwayat transaksi lokal dari awal ke database Notion. Cocok digunakan saat pertama kali setup database baru atau backup penuh.
-                </p>
-                <div className="flex items-center justify-between pt-1">
-                  <button
-                    type="button"
-                    onClick={handleResetExportTracking}
-                    className="text-[10px] text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 underline cursor-pointer"
-                  >
-                    Reset tanda ekspor ({config.exportedTxIds?.length || 0} ID tersimpan)
-                  </button>
-                  <button
-                    type="button"
-                    disabled={isTesting}
-                    onClick={handlePushAll}
-                    className="px-3.5 py-1.5 bg-stone-900 dark:bg-stone-700 hover:bg-stone-800 dark:hover:bg-stone-600 disabled:opacity-50 text-white rounded-lg font-semibold flex items-center gap-1.5 cursor-pointer text-xs shadow-xs"
-                  >
-                    <UploadCloud className="w-3.5 h-3.5" />
-                    <span>Export Langsung Semua Data</span>
-                  </button>
-                </div>
-              </div>
             </div>
 
             {/* Vercel Environment Variables Section */}
