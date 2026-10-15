@@ -29,6 +29,7 @@ interface ManageBudgetViewProps {
   onDeleteBudget: (id: string) => void;
   onDuplicateDetected: (categoryName: string, existingBudget: BudgetAllocation) => void;
   onUpdateSalaryCycle: (cycle: '1-end' | '25-24') => void;
+  onOpenSalaryConfig: () => void;
 }
 
 export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
@@ -41,6 +42,7 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
   onDeleteBudget,
   onDuplicateDetected,
   onUpdateSalaryCycle,
+  onOpenSalaryConfig,
 }) => {
   // Form states
   const [editingBudgetId, setEditingBudgetId] = useState<string | null>(null);
@@ -191,10 +193,24 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
 
       {/* Income Allocation Bar Card */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-stone-200">
-          <p className="text-xs text-stone-500 mb-1">Total Estimasi Pendapatan</p>
-          <p className="text-xl font-bold text-stone-900 tabular-nums">{formatIDR(totalIncome)}</p>
-          <p className="text-[11px] text-stone-400 mt-1">Gaji &amp; Passive Income</p>
+        <div className="bg-white p-5 rounded-2xl border border-stone-200 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-xs text-stone-500">Total Estimasi Pendapatan</p>
+              <button
+                type="button"
+                onClick={onOpenSalaryConfig}
+                className="flex items-center gap-1 text-[11px] font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-2 py-0.5 rounded-md transition-colors cursor-pointer"
+              >
+                <Edit2 className="w-3 h-3" />
+                <span>Ubah Gaji</span>
+              </button>
+            </div>
+            <p className="text-xl font-bold text-stone-900 tabular-nums">{formatIDR(totalIncome)}</p>
+          </div>
+          <p className="text-[11px] text-stone-400 mt-2">
+            Gaji &amp; Passive Income ({userProfile.salaryCycle === '25-24' ? 'Siklus tgl 25' : 'Siklus tgl 1'})
+          </p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-stone-200">

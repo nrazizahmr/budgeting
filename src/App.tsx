@@ -10,6 +10,7 @@ import { NotificationDrawer } from './components/NotificationDrawer';
 import { ToastContainer, ToastItem } from './components/Toast';
 import { ScenarioHelper } from './components/ScenarioHelper';
 import { NotionModal } from './components/NotionModal';
+import { SalaryConfigModal } from './components/SalaryConfigModal';
 import { StorageService } from './services/storage';
 import { evaluateBudgetAlert } from './utils/alertEngine';
 import {
@@ -41,6 +42,7 @@ export default function App() {
   const [isAddTransactionOpen, setIsAddTransactionOpen] = useState<boolean>(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState<boolean>(false);
   const [isNotionModalOpen, setIsNotionModalOpen] = useState<boolean>(false);
+  const [isSalaryModalOpen, setIsSalaryModalOpen] = useState<boolean>(false);
   const [prefillTx, setPrefillTx] = useState<any>(undefined);
 
   // Duplicate Budget Modal (AC-01.03)
@@ -331,6 +333,16 @@ export default function App() {
     });
   };
 
+  const handleSaveProfile = (updatedProfile: UserProfile) => {
+    setUserProfile(updatedProfile);
+    StorageService.saveProfile(updatedProfile);
+    addToast({
+      type: 'success',
+      title: 'Profil & Gaji Diperbarui',
+      message: `Estimasi gaji berhasil disimpan sebesar Rp${new Intl.NumberFormat('id-ID').format(updatedProfile.monthlyIncome)}.`,
+    });
+  };
+
   // Scenario Runner for testing all Acceptance Criteria
   const handleRunScenario = (scenarioId: string) => {
     switch (scenarioId) {
@@ -518,6 +530,7 @@ export default function App() {
         }}
         onOpenNotifications={() => setIsNotificationOpen(true)}
         onOpenNotionModal={() => setIsNotionModalOpen(true)}
+        onOpenSalaryConfig={() => setIsSalaryModalOpen(true)}
         notifications={notifications}
         isOnline={isOnline}
         onToggleOnline={toggleOnlineMode}
@@ -554,6 +567,7 @@ export default function App() {
             onDeleteBudget={handleDeleteBudget}
             onDuplicateDetected={handleDuplicateDetected}
             onUpdateSalaryCycle={handleUpdateSalaryCycle}
+            onOpenSalaryConfig={() => setIsSalaryModalOpen(true)}
           />
         )}
 
@@ -654,6 +668,14 @@ export default function App() {
           }
         }}
         onToast={addToast}
+      />
+
+      {/* Salary & Profile Config Modal */}
+      <SalaryConfigModal
+        isOpen={isSalaryModalOpen}
+        onClose={() => setIsSalaryModalOpen(false)}
+        userProfile={userProfile}
+        onSaveProfile={handleSaveProfile}
       />
 
       {/* Toasts Stack */}

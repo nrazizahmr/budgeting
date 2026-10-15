@@ -8,6 +8,7 @@ interface HeaderProps {
   onOpenAddTransaction: () => void;
   onOpenNotifications: () => void;
   onOpenNotionModal: () => void;
+  onOpenSalaryConfig: () => void;
   notifications: AlertNotification[];
   isOnline: boolean;
   onToggleOnline: () => void;
@@ -21,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAddTransaction,
   onOpenNotifications,
   onOpenNotionModal,
+  onOpenSalaryConfig,
   notifications,
   isOnline,
   onToggleOnline,
@@ -140,19 +142,26 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* User Avatar */}
-          <div className="flex items-center gap-2 pl-1 border-l border-stone-200">
+          {/* User Avatar & Profile Quick Trigger */}
+          <button
+            type="button"
+            onClick={onOpenSalaryConfig}
+            title="Klik untuk konfigurasi nominal gaji & profil"
+            className="flex items-center gap-2 pl-1 border-l border-stone-200 hover:opacity-80 transition-opacity cursor-pointer group text-left"
+          >
             <img
               src={profile.avatarUrl}
               alt={profile.name}
               referrerPolicy="no-referrer"
-              className="w-8 h-8 rounded-full object-cover border border-stone-200 shadow-2xs"
+              className="w-8 h-8 rounded-full object-cover border border-stone-200 shadow-2xs group-hover:ring-2 group-hover:ring-rose-400 transition-all"
             />
             <div className="hidden lg:block text-left text-xs">
-              <p className="font-semibold text-stone-900 leading-none">{profile.name}</p>
+              <p className="font-semibold text-stone-900 leading-none group-hover:text-rose-600 transition-colors">
+                {profile.name}
+              </p>
               <p className="text-stone-500 text-[11px] mt-0.5">{profile.age} th · {profile.currency}</p>
             </div>
-          </div>
+          </button>
 
           {/* Primary Action Button */}
           <button
