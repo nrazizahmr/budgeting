@@ -145,35 +145,35 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-xs overflow-y-auto">
-      <div className="bg-white rounded-2xl max-w-2xl w-full border border-stone-200 shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs overflow-y-auto">
+      <div className="bg-white dark:bg-stone-900 rounded-2xl max-w-2xl w-full border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="p-6 border-b border-stone-200 flex items-center justify-between bg-stone-50/70">
+        <div className="p-6 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between bg-stone-50/70 dark:bg-stone-800/50">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-stone-900 text-white flex items-center justify-center font-bold text-sm shadow-xs">
               N
             </div>
             <div>
-              <h2 className="text-base font-bold text-stone-900">Integrasi Database Notion &amp; Vercel</h2>
-              <p className="text-xs text-stone-500">Hubungkan penyimpanan data persistent ke workspace Notion kamu</p>
+              <h2 className="text-base font-bold text-stone-900 dark:text-white">Integrasi Database Notion &amp; Vercel</h2>
+              <p className="text-xs text-stone-500 dark:text-stone-400">Hubungkan penyimpanan data persistent ke workspace Notion kamu</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-200 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex border-b border-stone-200 px-6 bg-white text-xs font-semibold">
+        <div className="flex border-b border-stone-200 dark:border-stone-800 px-6 bg-white dark:bg-stone-900 text-xs font-semibold">
           <button
             onClick={() => setActiveTab('config')}
             className={`py-3 px-4 border-b-2 cursor-pointer transition-colors ${
               activeTab === 'config'
-                ? 'border-rose-600 text-rose-600 font-bold'
-                : 'border-transparent text-stone-500 hover:text-stone-800'
+                ? 'border-rose-600 text-rose-600 dark:text-rose-400 font-bold'
+                : 'border-transparent text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
             }`}
           >
             Pengaturan Kredensial &amp; Sync
@@ -182,8 +182,8 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
             onClick={() => setActiveTab('guide')}
             className={`py-3 px-4 border-b-2 cursor-pointer transition-colors ${
               activeTab === 'guide'
-                ? 'border-rose-600 text-rose-600 font-bold'
-                : 'border-transparent text-stone-500 hover:text-stone-800'
+                ? 'border-rose-600 text-rose-600 dark:text-rose-400 font-bold'
+                : 'border-transparent text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
             }`}
           >
             Panduan Langkah Setup (Step-by-Step)
@@ -194,7 +194,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
         {activeTab === 'config' && (
           <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto text-xs">
             <div>
-              <label className="block font-semibold text-stone-700 mb-1">
+              <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
                 Notion Internal Integration Secret (Token)
               </label>
               <input
@@ -202,15 +202,15 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                 value={config.apiKey}
                 onChange={(e) => setConfig({ ...config, apiKey: e.target.value })}
                 placeholder="secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                className="w-full px-3.5 py-2 text-xs font-mono text-stone-900 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-3.5 py-2 text-xs font-mono text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"
               />
-              <p className="text-[11px] text-stone-400 mt-1">
+              <p className="text-[11px] text-stone-400 dark:text-stone-500 mt-1">
                 Dibuat di{' '}
                 <a
                   href="https://www.notion.so/profile/integrations"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-rose-600 hover:underline inline-flex items-center gap-0.5"
+                  className="text-rose-600 dark:text-rose-400 hover:underline inline-flex items-center gap-0.5"
                 >
                   notion.so/my-integrations <ExternalLink className="w-3 h-3" />
                 </a>
@@ -219,7 +219,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block font-semibold text-stone-700 mb-1">
+                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
                   Database ID: Anggaran (Budgets)
                 </label>
                 <input
@@ -227,12 +227,12 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                   value={config.budgetsDbId}
                   onChange={(e) => setConfig({ ...config, budgetsDbId: e.target.value })}
                   placeholder="32 karakter hex / string ID database"
-                  className="w-full px-3.5 py-2 text-xs font-mono text-stone-900 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  className="w-full px-3.5 py-2 text-xs font-mono text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-stone-700 mb-1">
+                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
                   Database ID: Transaksi (Transactions)
                 </label>
                 <input
@@ -240,7 +240,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                   value={config.transactionsDbId}
                   onChange={(e) => setConfig({ ...config, transactionsDbId: e.target.value })}
                   placeholder="32 karakter hex / string ID database"
-                  className="w-full px-3.5 py-2 text-xs font-mono text-stone-900 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  className="w-full px-3.5 py-2 text-xs font-mono text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
               </div>
             </div>
@@ -250,14 +250,14 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
               <div
                 className={`p-3 rounded-xl border flex items-center gap-2 ${
                   testResult.success
-                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                    : 'bg-amber-50 border-amber-200 text-amber-800'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
+                    : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300'
                 }`}
               >
                 {testResult.success ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 ) : (
-                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                  <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                 )}
                 <span className="font-medium text-xs">{testResult.message}</span>
               </div>
@@ -268,7 +268,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
               <button
                 type="button"
                 onClick={handleSave}
-                className="px-4 py-2 bg-stone-900 text-white rounded-xl hover:bg-stone-800 font-semibold cursor-pointer"
+                className="px-4 py-2 bg-stone-900 dark:bg-rose-600 text-white rounded-xl hover:bg-stone-800 dark:hover:bg-rose-700 font-semibold cursor-pointer"
               >
                 Simpan Konfigurasi
               </button>
@@ -276,7 +276,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                 type="button"
                 disabled={isTesting}
                 onClick={handleTestConnection}
-                className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl font-semibold flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 rounded-xl font-semibold flex items-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isTesting ? 'animate-spin' : ''}`} />
                 <span>Test Koneksi</span>
@@ -285,7 +285,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                 type="button"
                 disabled={isTesting}
                 onClick={handlePushAll}
-                className="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 rounded-xl font-semibold flex items-center gap-1.5 cursor-pointer"
               >
                 <UploadCloud className="w-3.5 h-3.5" />
                 <span>Export Local Data ke Notion</span>
@@ -294,7 +294,7 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                 type="button"
                 disabled={isTesting}
                 onClick={handlePullAll}
-                className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-semibold flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 rounded-xl font-semibold flex items-center gap-1.5 cursor-pointer"
               >
                 <DownloadCloud className="w-3.5 h-3.5" />
                 <span>Tarik Data dari Notion</span>
@@ -302,18 +302,18 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
             </div>
 
             {/* Vercel Environment Variables Section */}
-            <div className="mt-6 pt-5 border-t border-stone-200">
+            <div className="mt-6 pt-5 border-t border-stone-200 dark:border-stone-800">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-stone-900">Salin Variabel Lingkungan untuk Vercel (Project Settings)</span>
+                <span className="font-bold text-stone-900 dark:text-white">Salin Variabel Lingkungan untuk Vercel (Project Settings)</span>
                 <button
                   onClick={copyEnv}
-                  className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                  className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
                 >
-                  {copiedEnv ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedEnv ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedEnv ? 'Tersalin!' : 'Salin Semua'}</span>
                 </button>
               </div>
-              <pre className="p-3 bg-stone-900 text-stone-100 rounded-xl font-mono text-[11px] overflow-x-auto">
+              <pre className="p-3 bg-stone-900 dark:bg-stone-950 text-stone-100 rounded-xl font-mono text-[11px] overflow-x-auto border border-stone-800">
                 {envSnippet}
               </pre>
             </div>
@@ -322,32 +322,32 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
 
         {/* Tab 2: Step-by-Step Guide */}
         {activeTab === 'guide' && (
-          <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto text-xs text-stone-600 leading-relaxed">
-            <div className="p-3.5 bg-rose-50/60 border border-rose-100 rounded-xl text-stone-800">
-              <p className="font-bold text-rose-900 mb-1">Kenapa lewat Serverless Vercel (`/api/notion`)?</p>
+          <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+            <div className="p-3.5 bg-rose-50/60 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900 rounded-xl text-stone-800 dark:text-stone-200">
+              <p className="font-bold text-rose-900 dark:text-rose-300 mb-1">Kenapa lewat Serverless Vercel (`/api/notion`)?</p>
               <p>
                 Notion API melarang request langsung dari browser client demi keamanan token rahasia (`CORS protection`). Aplikasi ini telah dilengkapi Serverless API endpoint di folder <code>api/notion.ts</code> dan konfigurasi <code>vercel.json</code> yang otomatis aktif begitu di-deploy ke Vercel!
               </p>
             </div>
 
             <div className="space-y-3">
-              <div className="border border-stone-200 rounded-xl p-4 bg-white">
-                <h4 className="font-bold text-stone-900 text-sm mb-1.5">Langkah 1: Buat Integrasi di Notion</h4>
-                <ol className="list-decimal list-inside space-y-1 text-stone-600">
-                  <li>Buka <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noreferrer" className="text-rose-600 font-semibold underline">notion.so/my-integrations</a>.</li>
+              <div className="border border-stone-200 dark:border-stone-800 rounded-xl p-4 bg-white dark:bg-stone-850">
+                <h4 className="font-bold text-stone-900 dark:text-white text-sm mb-1.5">Langkah 1: Buat Integrasi di Notion</h4>
+                <ol className="list-decimal list-inside space-y-1 text-stone-600 dark:text-stone-300">
+                  <li>Buka <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noreferrer" className="text-rose-600 dark:text-rose-400 font-semibold underline">notion.so/my-integrations</a>.</li>
                   <li>Klik <strong>New integration</strong>, beri nama misal <em>"BudgetIn Bot"</em>.</li>
                   <li>Pilih workspace kamu dan simpan.</li>
                   <li>Salin <strong>Internal Integration Secret</strong> (awalan <code>secret_...</code>).</li>
                 </ol>
               </div>
 
-              <div className="border border-stone-200 rounded-xl p-4 bg-white">
-                <h4 className="font-bold text-stone-900 text-sm mb-1.5">Langkah 2: Buat 2 Database di Halaman Notion</h4>
+              <div className="border border-stone-200 dark:border-stone-800 rounded-xl p-4 bg-white dark:bg-stone-850">
+                <h4 className="font-bold text-stone-900 dark:text-white text-sm mb-1.5">Langkah 2: Buat 2 Database di Halaman Notion</h4>
                 <p className="mb-2">Buat halaman Notion baru dan buat 2 tabel inline atau full-page:</p>
                 <div className="space-y-2">
-                  <div className="p-2.5 bg-stone-50 rounded-lg">
-                    <p className="font-semibold text-stone-800">1. Database Budgets:</p>
-                    <p className="text-[11px] text-stone-500">
+                  <div className="p-2.5 bg-stone-50 dark:bg-stone-800 rounded-lg">
+                    <p className="font-semibold text-stone-800 dark:text-stone-200">1. Database Budgets:</p>
+                    <p className="text-[11px] text-stone-500 dark:text-stone-400">
                       • <strong>Category</strong> (Title)<br />
                       • <strong>Period</strong> (Select, misal: "October 2026")<br />
                       • <strong>Allocated</strong> (Number)<br />
@@ -355,9 +355,9 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                       • <strong>Rollover</strong> (Checkbox)
                     </p>
                   </div>
-                  <div className="p-2.5 bg-stone-50 rounded-lg">
-                    <p className="font-semibold text-stone-800">2. Database Transactions:</p>
-                    <p className="text-[11px] text-stone-500">
+                  <div className="p-2.5 bg-stone-50 dark:bg-stone-800 rounded-lg">
+                    <p className="font-semibold text-stone-800 dark:text-stone-200">2. Database Transactions:</p>
+                    <p className="text-[11px] text-stone-500 dark:text-stone-400">
                       • <strong>Category</strong> (Title)<br />
                       • <strong>Amount</strong> (Number)<br />
                       • <strong>Date</strong> (Date)<br />
@@ -369,26 +369,26 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
                 </div>
               </div>
 
-              <div className="border border-stone-200 rounded-xl p-4 bg-white">
-                <h4 className="font-bold text-stone-900 text-sm mb-1.5">Langkah 3: Sambungkan Integrasi ke Database (Connect)</h4>
+              <div className="border border-stone-200 dark:border-stone-800 rounded-xl p-4 bg-white dark:bg-stone-850">
+                <h4 className="font-bold text-stone-900 dark:text-white text-sm mb-1.5">Langkah 3: Sambungkan Integrasi ke Database (Connect)</h4>
                 <p>
                   Pada masing-masing database di Notion, klik tombol <strong>•••</strong> di pojok kanan atas &gt; pilih <strong>Connections</strong> &gt; pilih integrasi <em>"BudgetIn Bot"</em> yang baru dibuat.
                 </p>
-                <p className="mt-1 text-[11px] text-stone-500">
+                <p className="mt-1 text-[11px] text-stone-500 dark:text-stone-400">
                   Salin <strong>Database ID</strong> dari URL Notion kamu: <br />
                   <code>https://www.notion.so/workspace/<strong>[32_karakter_database_id]</strong>?v=...</code>
                 </p>
               </div>
 
-              <div className="border border-stone-200 rounded-xl p-4 bg-white">
-                <h4 className="font-bold text-stone-900 text-sm mb-1.5">Langkah 4: Deploy ke Vercel</h4>
-                <ol className="list-decimal list-inside space-y-1 text-stone-600">
+              <div className="border border-stone-200 dark:border-stone-800 rounded-xl p-4 bg-white dark:bg-stone-850">
+                <h4 className="font-bold text-stone-900 dark:text-white text-sm mb-1.5">Langkah 4: Deploy ke Vercel</h4>
+                <ol className="list-decimal list-inside space-y-1 text-stone-600 dark:text-stone-300">
                   <li>Push repository ini ke GitHub/GitLab.</li>
-                  <li>Di <a href="https://vercel.com" target="_blank" rel="noreferrer" className="text-rose-600 font-semibold underline">vercel.com</a>, klik <strong>Add New Project</strong> &gt; Import repositori kamu.</li>
+                  <li>Di <a href="https://vercel.com" target="_blank" rel="noreferrer" className="text-rose-600 dark:text-rose-400 font-semibold underline">vercel.com</a>, klik <strong>Add New Project</strong> &gt; Import repositori kamu.</li>
                   <li>Framework Preset otomatis terdeteksi sebagai <strong>Vite</strong>.</li>
                   <li>Di bagian <strong>Environment Variables</strong>, tambahkan 3 variabel:</li>
                 </ol>
-                <div className="p-2.5 bg-stone-900 text-stone-100 rounded-lg font-mono text-[11px] mt-2">
+                <div className="p-2.5 bg-stone-900 dark:bg-stone-950 text-stone-100 rounded-lg font-mono text-[11px] mt-2 border border-stone-800">
                   NOTION_API_KEY = secret_...<br />
                   NOTION_BUDGETS_DB_ID = xxxxxxxx...<br />
                   NOTION_TRANSACTIONS_DB_ID = xxxxxxxx...
@@ -400,10 +400,10 @@ NOTION_TRANSACTIONS_DB_ID=${config.transactionsDbId || 'your_transactions_databa
         )}
 
         {/* Footer */}
-        <div className="p-4 border-t border-stone-200 bg-stone-50 flex justify-end">
+        <div className="p-4 border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-800/50 flex justify-end">
           <button
             onClick={onClose}
-            className="px-5 py-2 text-xs font-semibold text-stone-700 bg-stone-200 hover:bg-stone-300 rounded-xl transition-colors cursor-pointer"
+            className="px-5 py-2 text-xs font-semibold text-stone-700 dark:text-stone-200 bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 rounded-xl transition-colors cursor-pointer"
           >
             Tutup
           </button>

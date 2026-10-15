@@ -38,6 +38,39 @@ export default function App() {
   // Connectivity state (simulated or real)
   const [isOnline, setIsOnline] = useState<boolean>(true);
 
+  // Theme State (Light / Dark mode)
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      const saved = localStorage.getItem('budgetin_theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } catch {
+      return 'light';
+    }
+  });
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('budgetin_theme', theme);
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => {
+      const next = prev === 'light' ? 'dark' : 'light';
+      addToast({
+        type: 'info',
+        title: next === 'dark' ? 'Mode Gelap Aktif' : 'Mode Terang Aktif',
+        message: next === 'dark' ? 'Tema tampilan beralih ke Mode Gelap.' : 'Tema tampilan beralih ke Mode Terang.',
+        duration: 2500,
+      });
+      return next;
+    });
+  };
+
   // Modals & Drawers
   const [isAddTransactionOpen, setIsAddTransactionOpen] = useState<boolean>(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState<boolean>(false);
@@ -519,7 +552,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-stone-800 flex flex-col font-sans selection:bg-rose-100 selection:text-rose-900">
+    <div className="min-h-screen bg-[#faf9f6] dark:bg-[#0c0a09] text-stone-800 dark:text-stone-100 flex flex-col font-sans selection:bg-rose-100 selection:text-rose-900 transition-colors">
       {/* Universal Header following Top Bar Contract */}
       <Header
         activeTab={activeTab}
@@ -536,6 +569,8 @@ export default function App() {
         onToggleOnline={toggleOnlineMode}
         profile={userProfile}
         offlineCount={offlineQueue.length}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Viewport Content */}
@@ -597,14 +632,14 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-stone-200 bg-white py-6 mt-12 text-center text-xs text-stone-500">
+      <footer className="border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 py-6 mt-12 text-center text-xs text-stone-500 dark:text-stone-400 transition-colors">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-stone-900">BudgetIn</span>
+            <span className="font-bold text-stone-900 dark:text-white">BudgetIn</span>
             <span>·</span>
             <span>Aplikasi Pengelola Anggaran Personal untuk Wanita Usia 24 Tahun</span>
           </div>
-          <div className="text-stone-400">
+          <div className="text-stone-400 dark:text-stone-500">
             Hak Cipta © 2026 BudgetIn. Waktu Acuan: 14 Oktober 2026.
           </div>
         </div>

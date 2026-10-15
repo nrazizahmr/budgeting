@@ -59,5 +59,5 @@ export interface UserProfile {
   currency: string;
   salaryCycle: '1-end' | '25-24';
   salaryCycleStartDay: number;
-  avatarUrl: string;
+  avatarUrl?: string;
 }

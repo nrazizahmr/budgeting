@@ -215,27 +215,27 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-xs overflow-y-auto">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-stone-200 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs overflow-y-auto">
+      <div className="w-full max-w-lg bg-white dark:bg-stone-900 rounded-2xl shadow-xl border border-stone-200 dark:border-stone-800 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-stone-50/50">
+        <div className="px-6 py-4 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between bg-stone-50/50 dark:bg-stone-800/50">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-stone-900">Catat Pengeluaran Cepat</h2>
-              <p className="text-xs text-stone-500 flex items-center gap-1.5">
+              <h2 className="text-base font-bold text-stone-900 dark:text-white">Catat Pengeluaran Cepat</h2>
+              <p className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-1.5">
                 <Clock className="w-3 h-3 text-stone-400" />
                 <span>Input dalam &lt;15 detik</span>
-                <span className="text-stone-300">·</span>
-                <span className="font-mono text-stone-600">{secondsElapsed}s</span>
+                <span className="text-stone-300 dark:text-stone-600">·</span>
+                <span className="font-mono text-stone-600 dark:text-stone-300">{secondsElapsed}s</span>
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -243,20 +243,20 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
         {/* Offline indicator notice if applicable */}
         {!isOnline && (
-          <div className="px-6 py-2 bg-amber-50 border-b border-amber-200 text-amber-900 text-xs flex items-center justify-between">
+          <div className="px-6 py-2 bg-amber-50 dark:bg-amber-950/60 border-b border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-200 text-xs flex items-center justify-between">
             <span>Offline Mode: Transaksi akan tersimpan lokal dan disinkronkan saat online.</span>
-            <span className="font-bold text-[10px] bg-amber-200/80 px-2 py-0.5 rounded">Save to local, not sync</span>
+            <span className="font-bold text-[10px] bg-amber-200/80 dark:bg-amber-900 px-2 py-0.5 rounded">Save to local, not sync</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Amount input */}
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1">
+            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
               Nominal Pengeluaran (amount) <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 font-bold text-sm">
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 dark:text-stone-500 font-bold text-sm">
                 Rp
               </span>
               <input
@@ -266,12 +266,12 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                 onChange={handleAmountChange}
                 placeholder="0"
                 autoFocus
-                className={`w-full pl-11 pr-4 py-2.5 text-lg font-bold tabular-nums text-stone-900 bg-white border rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 ${
-                  amountError ? 'border-rose-300 bg-rose-50/30' : 'border-stone-200'
+                className={`w-full pl-11 pr-4 py-2.5 text-lg font-bold tabular-nums text-stone-900 dark:text-white bg-white dark:bg-stone-800 border rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                  amountError ? 'border-rose-300 dark:border-rose-700 bg-rose-50/30 dark:bg-rose-950/30' : 'border-stone-200 dark:border-stone-700'
                 }`}
               />
             </div>
-            {amountError && <p className="text-xs text-rose-600 mt-1">{amountError}</p>}
+            {amountError && <p className="text-xs text-rose-600 dark:text-rose-400 mt-1">{amountError}</p>}
 
             {/* Quick shortcuts */}
             <div className="flex flex-wrap gap-1.5 mt-2">
@@ -280,7 +280,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                   key={val}
                   type="button"
                   onClick={() => handleQuickAmount(val)}
-                  className="px-2.5 py-1 text-[11px] font-medium text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-md transition-colors cursor-pointer"
+                  className="px-2.5 py-1 text-[11px] font-medium text-stone-600 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 rounded-md transition-colors cursor-pointer"
                 >
                   +{formatIDR(val)}
                 </button>
@@ -290,19 +290,19 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
           {/* Category Select */}
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1">
+            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
               Kategori Anggaran (category_id) <span className="text-rose-500">*</span>
             </label>
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-sm text-stone-900 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
+              className="w-full px-3.5 py-2.5 text-sm text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
             >
               <option value="" disabled>Pilih kategori aktif...</option>
               {categories.map((c) => {
                 const b = budgets.find((item) => item.categoryId === c.id);
                 return (
-                  <option key={c.id} value={c.id}>
+                  <option key={c.id} value={c.id} className="dark:bg-stone-800 dark:text-white">
                     {c.name} {b ? `(Tersisa: ${formatIDR(b.allocatedAmount - b.spentAmount)})` : '(Belum dialokasi)'}
                   </option>
                 );
@@ -311,16 +311,16 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
             {/* Live budget impact preview */}
             {selectedBudget && (
-              <div className="mt-2 p-2.5 rounded-lg bg-stone-50 border border-stone-200 text-xs flex items-center justify-between">
+              <div className="mt-2 p-2.5 rounded-lg bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 text-xs flex items-center justify-between">
                 <div>
-                  <span className="text-stone-500">Sisa Kuota Saat Ini: </span>
-                  <span className="font-semibold tabular-nums text-stone-800">{formatIDR(currentRemaining)}</span>
+                  <span className="text-stone-500 dark:text-stone-400">Sisa Kuota Saat Ini: </span>
+                  <span className="font-semibold tabular-nums text-stone-800 dark:text-stone-200">{formatIDR(currentRemaining)}</span>
                 </div>
                 <div>
-                  <span className="text-stone-500">Setelah Transaksi: </span>
+                  <span className="text-stone-500 dark:text-stone-400">Setelah Transaksi: </span>
                   <span
                     className={`font-bold tabular-nums ${
-                      projectedRemaining < 0 ? 'text-rose-600' : 'text-emerald-600'
+                      projectedRemaining < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'
                     }`}
                   >
                     {formatIDR(projectedRemaining)}
@@ -332,24 +332,24 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
           {/* Date Time Picker: AC-02.02 validation */}
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1">
+            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
               Waktu Transaksi (date_time) <span className="text-rose-500">*</span>
             </label>
             <input
               type="datetime-local"
               value={dateTime}
               onChange={(e) => handleDateChange(e.target.value)}
-              className={`w-full px-3.5 py-2 text-sm text-stone-900 bg-white border rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 ${
-                dateError ? 'border-rose-400 bg-rose-50/50' : 'border-stone-200'
+              className={`w-full px-3.5 py-2 text-sm text-stone-900 dark:text-white bg-white dark:bg-stone-800 border rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                dateError ? 'border-rose-400 dark:border-rose-600 bg-rose-50/50 dark:bg-rose-950/40' : 'border-stone-200 dark:border-stone-700'
               }`}
             />
             {dateError ? (
-              <div className="flex items-center gap-1.5 mt-1 text-xs text-rose-600 font-medium">
+              <div className="flex items-center gap-1.5 mt-1 text-xs text-rose-600 dark:text-rose-400 font-medium">
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>{dateError}</span>
               </div>
             ) : (
-              <p className="text-[11px] text-stone-500 mt-1">
+              <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1">
                 Hari ini: 14 Oktober 2026. Transaksi masa depan tidak diperbolehkan.
               </p>
             )}
@@ -358,31 +358,31 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
           {/* Payment Method */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">
+              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
                 Metode Pembayaran <span className="text-rose-500">*</span>
               </label>
               <select
                 value={paymentMethod}
                 onChange={(e) => handlePaymentMethodChange(e.target.value as PaymentMethodType)}
-                className="w-full px-3 py-2 text-sm text-stone-900 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
+                className="w-full px-3 py-2 text-sm text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
               >
-                <option value="E-Wallet">E-Wallet</option>
-                <option value="Rekening Bank">Rekening Bank</option>
-                <option value="Cash">Cash</option>
-                <option value="Kartu Kredit">Kartu Kredit</option>
+                <option value="E-Wallet" className="dark:bg-stone-800">E-Wallet</option>
+                <option value="Rekening Bank" className="dark:bg-stone-800">Rekening Bank</option>
+                <option value="Cash" className="dark:bg-stone-800">Cash</option>
+                <option value="Kartu Kredit" className="dark:bg-stone-800">Kartu Kredit</option>
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">
+              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
                 Penyedia / Dompet
               </label>
               <select
                 value={paymentProvider}
                 onChange={(e) => setPaymentProvider(e.target.value)}
-                className="w-full px-3 py-2 text-sm text-stone-900 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
+                className="w-full px-3 py-2 text-sm text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
               >
                 {PAYMENT_PROVIDERS[paymentMethod]?.map((prov) => (
-                  <option key={prov} value={prov}>{prov}</option>
+                  <option key={prov} value={prov} className="dark:bg-stone-800">{prov}</option>
                 ))}
               </select>
             </div>
@@ -391,8 +391,8 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
           {/* Notes (Max 250 characters, auto-sanitized) */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-semibold text-stone-700">Catatan (notes)</label>
-              <span className="text-[10px] text-stone-400">{notes.length}/250</span>
+              <label className="text-xs font-semibold text-stone-700 dark:text-stone-300">Catatan (notes)</label>
+              <span className="text-[10px] text-stone-400 dark:text-stone-500">{notes.length}/250</span>
             </div>
             <input
               type="text"
@@ -400,24 +400,24 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Contoh: Makan siang bareng rekan kerja, Fore Coffee"
-              className="w-full px-3.5 py-2 text-sm text-stone-900 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="w-full px-3.5 py-2 text-sm text-stone-900 dark:text-white bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"
             />
           </div>
 
           {/* Receipt Image File upload (Max 5MB, JPG/PNG/PDF) */}
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1">
+            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
               Bukti Struk (receipt_image)
             </label>
             {receiptFile ? (
-              <div className="p-3 bg-stone-50 border border-stone-200 rounded-xl flex items-center justify-between">
+              <div className="p-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-8 h-8 rounded bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
                     <FileText className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-medium text-stone-800 truncate">{receiptFile.name}</p>
-                    <p className="text-[10px] text-stone-500">{(receiptFile.size / 1024).toFixed(1)} KB</p>
+                    <p className="text-xs font-medium text-stone-800 dark:text-stone-200 truncate">{receiptFile.name}</p>
+                    <p className="text-[10px] text-stone-500 dark:text-stone-400">{(receiptFile.size / 1024).toFixed(1)} KB</p>
                   </div>
                 </div>
                 <button
@@ -429,9 +429,9 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                 </button>
               </div>
             ) : (
-              <label className="border-2 border-dashed border-stone-200 hover:border-rose-400 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer transition-colors bg-stone-50/50 hover:bg-rose-50/20">
+              <label className="border-2 border-dashed border-stone-200 dark:border-stone-700 hover:border-rose-400 dark:hover:border-rose-500 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer transition-colors bg-stone-50/50 dark:bg-stone-800/40 hover:bg-rose-50/20 dark:hover:bg-rose-950/20">
                 <Upload className="w-4 h-4 text-stone-400" />
-                <span className="text-xs font-medium text-stone-600">Unggah Struk (.JPG, .PNG, .PDF, Max 5MB)</span>
+                <span className="text-xs font-medium text-stone-600 dark:text-stone-300">Unggah Struk (.JPG, .PNG, .PDF, Max 5MB)</span>
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/jpg,application/pdf"
@@ -440,15 +440,15 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                 />
               </label>
             )}
-            {receiptError && <p className="text-xs text-rose-600 mt-1">{receiptError}</p>}
+            {receiptError && <p className="text-xs text-rose-600 dark:text-rose-400 mt-1">{receiptError}</p>}
           </div>
 
           {/* Submit Actions */}
-          <div className="pt-3 border-t border-stone-200 flex items-center justify-end gap-3">
+          <div className="pt-3 border-t border-stone-200 dark:border-stone-800 flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-stone-600 hover:text-stone-800 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors cursor-pointer"
+              className="px-4 py-2 text-xs font-semibold text-stone-600 dark:text-stone-300 hover:text-stone-800 dark:hover:text-white bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 rounded-lg transition-colors cursor-pointer"
             >
               Batal
             </button>
@@ -457,7 +457,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
               disabled={isSubmitDisabled}
               className={`px-5 py-2.5 text-xs font-semibold rounded-lg transition-all shadow-xs flex items-center gap-2 cursor-pointer ${
                 isSubmitDisabled
-                  ? 'bg-stone-200 text-stone-400 cursor-not-allowed shadow-none'
+                  ? 'bg-stone-200 dark:bg-stone-800 text-stone-400 dark:text-stone-600 cursor-not-allowed shadow-none'
                   : 'bg-rose-600 hover:bg-rose-700 text-white'
               }`}
             >

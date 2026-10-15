@@ -26,7 +26,6 @@ export const DEFAULT_PROFILE: UserProfile = {
   currency: 'IDR',
   salaryCycle: '1-end',
   salaryCycleStartDay: 1,
-  avatarUrl: '/src/assets/images/avatar_young_woman_1791961999922.jpg',
 };
 
 export const DEFAULT_CATEGORIES: Category[] = [
