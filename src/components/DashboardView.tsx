@@ -87,7 +87,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   // Prepare data for Chart 2: Pie / Donut Chart (distribusi pengeluaran antar kategori)
   const categorySpendMap: Record<string, { name: string; amount: number; color: string }> = {};
-  
+
   // Aggregate from active transactions or budgets
   activeBudgets.forEach((b, idx) => {
     const cat = categories.find((c) => c.id === b.categoryId);
@@ -118,7 +118,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <div className="bg-white dark:bg-stone-900 rounded-2xl p-6 border border-stone-200 dark:border-stone-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
         <div>
           <span className="text-xs font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
-            US-04 · Analytics &amp; Visualization
+            Analytics &amp; Visualization
           </span>
           <h1 className="text-2xl font-bold text-stone-900 dark:text-white mt-0.5">Overview Finansial</h1>
           <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
@@ -191,31 +191,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="bg-stone-100 dark:bg-stone-800 p-1 rounded-xl flex items-center text-xs">
             <button
               onClick={() => handlePeriodTab('current')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-                filterMode === 'current' && selectedPeriod === 'October 2026'
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${filterMode === 'current' && selectedPeriod === 'October 2026'
                   ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-2xs font-semibold'
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-              }`}
+                }`}
             >
               Oct 2026
             </button>
             <button
               onClick={() => handlePeriodTab('last')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-                filterMode === 'last' && selectedPeriod === 'September 2026'
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${filterMode === 'last' && selectedPeriod === 'September 2026'
                   ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-2xs font-semibold'
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-              }`}
+                }`}
             >
               Sep 2026
             </button>
             <button
               onClick={() => handlePeriodTab('custom')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-                filterMode === 'custom'
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${filterMode === 'custom'
                   ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-2xs font-semibold'
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-              }`}
+                }`}
             >
               Custom
             </button>
@@ -286,13 +283,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="mt-4">
                 <div className="w-full bg-stone-100 dark:bg-stone-800 h-2 rounded-full overflow-hidden">
                   <div
-                    className={`h-full transition-all duration-300 ${
-                      overallPercentage > 100
+                    className={`h-full transition-all duration-300 ${overallPercentage > 100
                         ? 'bg-neutral-900 dark:bg-neutral-100'
                         : overallPercentage >= 80
-                        ? 'bg-amber-400'
-                        : 'bg-rose-500'
-                    }`}
+                          ? 'bg-amber-400'
+                          : 'bg-rose-500'
+                      }`}
                     style={{ width: `${Math.min(100, overallPercentage)}%` }}
                   />
                 </div>
@@ -310,9 +306,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <CreditCard className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <p
-                  className={`text-2xl font-bold tabular-nums ${
-                    netRemaining >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
-                  }`}
+                  className={`text-2xl font-bold tabular-nums ${netRemaining >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                    }`}
                 >
                   {formatIDR(netRemaining)}
                 </p>
@@ -348,9 +343,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div className="flex items-center justify-between">
                   <span className="text-stone-500 dark:text-stone-400">Proyeksi Akhir Siklus:</span>
                   <span
-                    className={`font-semibold tabular-nums ${
-                      burnRateData.isPaceOverbudget ? 'text-amber-600 dark:text-amber-400' : 'text-stone-700 dark:text-stone-300'
-                    }`}
+                    className={`font-semibold tabular-nums ${burnRateData.isPaceOverbudget ? 'text-amber-600 dark:text-amber-400' : 'text-stone-700 dark:text-stone-300'
+                      }`}
                   >
                     {formatIDR(burnRateData.projectedTotal)}
                   </span>

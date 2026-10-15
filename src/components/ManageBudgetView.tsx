@@ -168,7 +168,7 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
-              US-01 · Alokasi Pengeluaran
+              Alokasi Pengeluaran
             </span>
           </div>
           <h1 className="text-2xl font-bold text-stone-900 dark:text-white">Manage Budget &amp; Alokasi</h1>
@@ -183,21 +183,19 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
           <div className="flex items-center gap-2 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl text-xs">
             <button
               onClick={() => onUpdateSalaryCycle('1-end')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-                userProfile.salaryCycle === '1-end'
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${userProfile.salaryCycle === '1-end'
                   ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-2xs font-semibold'
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-              }`}
+                }`}
             >
               1 - Akhir Bulan
             </button>
             <button
               onClick={() => onUpdateSalaryCycle('25-24')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-                userProfile.salaryCycle === '25-24'
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${userProfile.salaryCycle === '25-24'
                   ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-2xs font-semibold'
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-              }`}
+                }`}
             >
               Siklus Gaji (25 - 24)
             </button>
@@ -365,9 +363,8 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
                   onChange={handleNominalChange}
                   onBlur={() => setNominalTouched(true)}
                   placeholder="0"
-                  className={`w-full pl-11 pr-4 py-2.5 text-base font-bold tabular-nums text-stone-900 dark:text-white bg-white dark:bg-stone-800 border rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 ${
-                    inlineNominalError ? 'border-rose-400 bg-rose-50/20 dark:bg-rose-950/20' : 'border-stone-200 dark:border-stone-700'
-                  }`}
+                  className={`w-full pl-11 pr-4 py-2.5 text-base font-bold tabular-nums text-stone-900 dark:text-white bg-white dark:bg-stone-800 border rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 ${inlineNominalError ? 'border-rose-400 bg-rose-50/20 dark:bg-rose-950/20' : 'border-stone-200 dark:border-stone-700'
+                    }`}
                 />
               </div>
 
@@ -463,11 +460,10 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
               <button
                 type="submit"
                 disabled={!isFormValid}
-                className={`w-full py-2.5 px-4 text-xs font-bold rounded-xl transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer ${
-                  !isFormValid
+                className={`w-full py-2.5 px-4 text-xs font-bold rounded-xl transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer ${!isFormValid
                     ? 'bg-stone-200 dark:bg-stone-800 text-stone-400 dark:text-stone-600 cursor-not-allowed shadow-none'
                     : 'bg-rose-600 hover:bg-rose-700 text-white'
-                }`}
+                  }`}
               >
                 <Check className="w-4 h-4" />
                 <span>Save Budget</span>
@@ -501,11 +497,10 @@ export const ManageBudgetView: React.FC<ManageBudgetViewProps> = ({
                       key={sp}
                       type="button"
                       onClick={() => onChangePeriod(sp)}
-                      className={`px-2 py-0.5 text-[10px] rounded-md font-medium transition-colors cursor-pointer ${
-                        isCurrent
+                      className={`px-2 py-0.5 text-[10px] rounded-md font-medium transition-colors cursor-pointer ${isCurrent
                           ? 'bg-rose-600 text-white font-bold shadow-2xs'
                           : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-                      }`}
+                        }`}
                     >
                       {pInfo.monthLabelId} {pInfo.year} ({count})
                     </button>
